@@ -1,5 +1,4 @@
 import 'package:calorie_tracker/auth/google_auth.dart';
-import 'package:calorie_tracker/screens/user_info_screen/user_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:get/get.dart';
