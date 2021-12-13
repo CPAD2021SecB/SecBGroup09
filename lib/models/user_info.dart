@@ -10,6 +10,7 @@ class UserData {
     this.age,
     this.height,
     this.weight,
+    this.dailyCalorieIntake,
     this.createdAt,
   });
 
@@ -17,21 +18,23 @@ class UserData {
   final int? age;
   final double? height;
   final double? weight;
+  final int? dailyCalorieIntake;
   final DateTime? createdAt;
 
   factory UserData.fromMap(Map<String, dynamic> json) => UserData(
-        name: json["name"],
-        age: json["age"],
-        height: json["height"].toDouble(),
-        weight: json["weight"].toDouble(),
-        createdAt: DateTime.parse(json["created_at"]),
-      );
+      name: json["name"],
+      age: json["age"],
+      dailyCalorieIntake: json["daily_calorie_intake"],
+      height: json["height"].toDouble(),
+      weight: json["weight"].toDouble(),
+      createdAt: DateTime.parse(json["created_at"]));
 
   Map<String, dynamic> toMap() => {
         "name": name,
         "age": age,
         "height": height,
         "weight": weight,
+        "daily_calorie_intake": dailyCalorieIntake,
         "created_at": createdAt?.toIso8601String(),
       };
 }

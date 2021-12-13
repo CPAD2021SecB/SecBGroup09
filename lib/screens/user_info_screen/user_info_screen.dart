@@ -26,11 +26,20 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       setState(() {
         _isLoading = true;
       });
+      int age = int.parse(_ageController.text);
+      double height = double.parse(_heightController.text);
+      double weight = double.parse(_weightController.text);
+
+      // Basal Metabolic Rate (BMR) Calculator : Mifflin-St Jeor Equation
+      final int dailyCalorieIntake =
+          (10 * weight + 6.25 * height - 5 * age + 5).toInt();
+
       UserData userData = UserData(
         name: _nameController.text,
-        age: int.parse(_ageController.text),
-        height: double.parse(_heightController.text),
-        weight: double.parse(_weightController.text),
+        age: age,
+        height: height,
+        weight: weight,
+        dailyCalorieIntake: dailyCalorieIntake,
         createdAt: DateTime.now(),
       );
       UserInfoService.saveUserData(userData).then((_) {
@@ -118,12 +127,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   TextFormField(
                     controller: _heightController,
                     validator: (value) => Validation.validateHeight(value),
-                    decoration: const InputDecoration(labelText: "Height"),
+                    decoration: const InputDecoration(labelText: "Height (cm)"),
                   ),
                   TextFormField(
                     controller: _weightController,
                     validator: (value) => Validation.validateWeight(value),
-                    decoration: const InputDecoration(labelText: "Weight"),
+                    decoration: const InputDecoration(labelText: "Weight (kg)"),
                   ),
                 ],
               ),
