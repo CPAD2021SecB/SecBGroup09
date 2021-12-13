@@ -12,11 +12,11 @@ class UserInfoService {
 
   static Future<UserData> fetchUserData() async {
     DocumentSnapshot response;
-    UserData userData;
+    UserData userData = UserData();
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     response =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    userData = userInfoFromMap(response.data().toString());
+    userData = userData.fromMap(response.data() as Map<String, dynamic>);
 
     return userData;
   }

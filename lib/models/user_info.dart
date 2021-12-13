@@ -1,9 +1,3 @@
-import 'dart:convert';
-
-UserData userInfoFromMap(String str) => UserData.fromMap(json.decode(str));
-
-String userInfoToMap(UserData data) => json.encode(data.toMap());
-
 class UserData {
   UserData({
     this.name,
@@ -21,7 +15,7 @@ class UserData {
   final int? dailyCalorieIntake;
   final DateTime? createdAt;
 
-  factory UserData.fromMap(Map<String, dynamic> json) => UserData(
+  fromMap(Map<String, dynamic> json) => UserData(
       name: json["name"],
       age: json["age"],
       dailyCalorieIntake: json["daily_calorie_intake"],
