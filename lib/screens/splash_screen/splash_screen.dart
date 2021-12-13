@@ -1,6 +1,7 @@
 import 'package:calorie_tracker/screens/home_screen/home_screen.dart';
 import 'package:calorie_tracker/screens/login_screen/login_screen.dart';
 import 'package:calorie_tracker/screens/user_info_screen/user_info_screen.dart';
+import 'package:calorie_tracker/services/user_info_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,19 +26,12 @@ class _SplashScreenState extends State<SplashScreen> {
     FirebaseAuth.instance.userChanges().listen((user) async {
       if (user == null) {
         Get.offAll(() => const LoginScreen());
-      } else if (await _userDetailExists(user.uid)) {
+      } else if (await UserInfoService.userDetailExistsInDb(user.uid)) {
         Get.offAll(() => const HomeScreen());
       } else {
         Get.offAll(() => const UserInfoScreen());
       }
     });
-  }
-
-  Future<bool> _userDetailExists(String userId) async {
-    final snapShot =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
-
-    return snapShot.exists;
   }
 
   @override
