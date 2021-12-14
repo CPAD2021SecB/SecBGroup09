@@ -1,6 +1,7 @@
 import 'package:calorie_tracker/screens/home_screen/widgets/action_button.dart';
 import 'package:calorie_tracker/screens/home_screen/widgets/camera_button.dart';
 import 'package:calorie_tracker/screens/home_screen/widgets/daily_progress.dart';
+import 'package:calorie_tracker/screens/sport_event_screen/sport_event_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,12 +36,16 @@ class HomeScreen extends StatelessWidget {
                 const CameraButton(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
+                  children: [
                     ActionButton(
                       svgPath: "assets/svg/events.svg",
+                      onPressed: () {
+                        Get.to(() => const SportEventScreen());
+                      },
                     ),
                     ActionButton(
                       svgPath: "assets/svg/status.svg",
+                      onPressed: () {},
                     ),
                   ],
                 )

@@ -24,7 +24,7 @@ class _DailyProgressState extends State<DailyProgress> {
   _fetchCalorieData() async {
     caloriesConsumed = await CalorieService.fetchUserCalorieInfo();
     await UserInfoService.fetchUserData()
-        .then((userData) => totalCalories = userData.dailyCalorieIntake!);
+        .then((userData) => totalCalories = userData.dailyCalorieIntake ?? 1);
     setState(() {});
   }
 

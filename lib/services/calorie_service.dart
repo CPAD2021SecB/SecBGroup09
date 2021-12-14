@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class CalorieService {
   static Future<int> fetchUserCalorieInfo() async {
-    int calorie = 0;
+    int? calorie;
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     DocumentSnapshot response = await FirebaseFirestore.instance
         .collection('calorie_intake')
@@ -15,7 +15,7 @@ class CalorieService {
           (response.data() as Map)[DateFormat.yMd().format(DateTime.now())];
     }
 
-    return calorie;
+    return calorie ?? 0;
   }
 
   static Future<void> updateUserCalorieInfo(int calorie) async {
