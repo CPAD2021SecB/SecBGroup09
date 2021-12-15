@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     // ignore: missing_enum_constant_in_switch
     switch (defaultTargetPlatform) {
@@ -40,6 +37,16 @@ class DefaultFirebaseOptions {
     );
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDrs4mcdPSmOhs9aws2bt59oizsx8Zb6bQ',
+    appId: '1:273967639298:web:539ce9b0c5f9bdbcbef01b',
+    messagingSenderId: '273967639298',
+    projectId: 'calorie-tracker-101e2',
+    authDomain: 'calorie-tracker-101e2.firebaseapp.com',
+    storageBucket: 'calorie-tracker-101e2.appspot.com',
+    measurementId: 'G-G6B8N2SSJR',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCOPSE-HRBmeu963Wq1IJ8seJErD3UDvKU',
     appId: '1:273967639298:android:e6d3809e2e90b1d2bef01b',
@@ -50,12 +57,14 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAYZK4DN8YyoY8gagYWzrjtJox6nYkhIcY',
-    appId: '1:273967639298:ios:23c44d89aa84370cbef01b',
+    appId: '1:273967639298:ios:a82d506d95ab3687bef01b',
     messagingSenderId: '273967639298',
     projectId: 'calorie-tracker-101e2',
     storageBucket: 'calorie-tracker-101e2.appspot.com',
-    androidClientId: '273967639298-qjq64cs8knelfhbmao360u9t89blchb4.apps.googleusercontent.com',
-    iosClientId: '273967639298-31u2h7re1naj4kov78mrgsh4q8a7n8l8.apps.googleusercontent.com',
-    iosBundleId: 'com.example.calorieTracke',
+    androidClientId:
+        '273967639298-qjq64cs8knelfhbmao360u9t89blchb4.apps.googleusercontent.com',
+    iosClientId:
+        '273967639298-k8uunmfl4ouj7r0p98cdde9klbca9rmf.apps.googleusercontent.com',
+    iosBundleId: 'com.example.calorieTrackerr',
   );
 }
