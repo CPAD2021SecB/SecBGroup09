@@ -1,12 +1,36 @@
+import 'package:calorie_tracker/screens/health_status_screen/health_status_screen.dart';
 import 'package:calorie_tracker/screens/home_screen/widgets/action_button.dart';
 import 'package:calorie_tracker/screens/home_screen/widgets/camera_button.dart';
 import 'package:calorie_tracker/screens/home_screen/widgets/daily_progress.dart';
 import 'package:calorie_tracker/screens/sport_event_screen/sport_event_screen.dart';
+import 'package:calorie_tracker/services/calorie_service.dart';
+import 'package:calorie_tracker/services/user_info_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int caloriesConsumed = 0;
+  int totalCalories = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCalorieData();
+  }
+
+  _fetchCalorieData() async {
+    caloriesConsumed = await CalorieService.fetchUserCalorieInfo();
+    await UserInfoService.fetchUserData()
+        .then((userData) => totalCalories = userData.dailyCalorieIntake ?? 1);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +51,10 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: Get.height * 0.1,
             ),
-            const DailyProgress(),
+            DailyProgress(
+              caloriesConsumed: caloriesConsumed,
+              totalCalories: totalCalories,
+            ),
             SizedBox(
               height: Get.height * 0.2,
             ),
@@ -45,7 +72,14 @@ class HomeScreen extends StatelessWidget {
                     ),
                     ActionButton(
                       svgPath: "assets/svg/status.svg",
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(
+                          () => HealthStatusScreen(
+                            allocatedCalories: totalCalories,
+                            isHealthy: (caloriesConsumed / totalCalories) < 1,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 )

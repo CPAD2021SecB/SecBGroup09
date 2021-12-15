@@ -1,32 +1,13 @@
-import 'package:calorie_tracker/services/calorie_service.dart';
-import 'package:calorie_tracker/services/user_info_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class DailyProgress extends StatefulWidget {
-  const DailyProgress({Key? key}) : super(key: key);
-
-  @override
-  State<DailyProgress> createState() => _DailyProgressState();
-}
-
-class _DailyProgressState extends State<DailyProgress> {
-  int caloriesConsumed = 0;
-  int totalCalories = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchCalorieData();
-  }
-
-  _fetchCalorieData() async {
-    caloriesConsumed = await CalorieService.fetchUserCalorieInfo();
-    await UserInfoService.fetchUserData()
-        .then((userData) => totalCalories = userData.dailyCalorieIntake ?? 1);
-    setState(() {});
-  }
+class DailyProgress extends StatelessWidget {
+  final int caloriesConsumed;
+  final int totalCalories;
+  const DailyProgress(
+      {Key? key, required this.caloriesConsumed, required this.totalCalories})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
