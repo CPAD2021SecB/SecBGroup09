@@ -49,6 +49,9 @@ dependencies:
   intl: ^0.17.0
   shimmer: ^2.0.0
   pedometer: ^3.0.0
+  image_picker: ^0.8.4+4
+  dio: ^4.0.4
+  google_ml_kit: ^0.7.3
 
 dev_dependencies:
   flutter_test:
