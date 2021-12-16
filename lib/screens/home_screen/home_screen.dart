@@ -6,7 +6,9 @@ import 'package:calorie_tracker/screens/sport_event_screen/sport_event_screen.da
 import 'package:calorie_tracker/services/calorie_service.dart';
 import 'package:calorie_tracker/services/user_info_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:pedometer/pedometer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,20 +18,48 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int caloriesConsumed = 0;
-  int totalCalories = 0;
+  int _caloriesConsumed = 0;
+  int _totalCalories = 0;
+  int _steps = 0;
+  late Stream<StepCount> _stepCountStream;
+
+  _fetchCalorieData() async {
+    _caloriesConsumed = await CalorieService.fetchUserCalorieInfo();
+    _caloriesConsumed = _caloriesConsumed.clamp(0, double.infinity).toInt();
+    await UserInfoService.fetchUserData()
+        .then((userData) => _totalCalories = userData.dailyCalorieIntake ?? 1);
+    setState(() {});
+  }
+
+  _onStepCount(StepCount event) {
+    _steps += event.steps;
+    int calorieBurned = _steps % 20;
+    _steps = _steps - (calorieBurned * 20);
+    CalorieService.updateUserCalorieInfo(-calorieBurned);
+  }
+
+  _onStepCountError(error) {
+    final snackBar = SnackBar(
+      content: Text(
+        error.message.toString(),
+      ),
+      backgroundColor: Colors.red,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  _initPlatformState() {
+    _stepCountStream = Pedometer.stepCountStream;
+
+    _stepCountStream.listen(_onStepCount).onError(_onStepCountError);
+  }
 
   @override
   void initState() {
     super.initState();
     _fetchCalorieData();
-  }
-
-  _fetchCalorieData() async {
-    caloriesConsumed = await CalorieService.fetchUserCalorieInfo();
-    await UserInfoService.fetchUserData()
-        .then((userData) => totalCalories = userData.dailyCalorieIntake ?? 1);
-    setState(() {});
+    _initPlatformState();
   }
 
   @override
@@ -52,15 +82,17 @@ class _HomeScreenState extends State<HomeScreen> {
               height: Get.height * 0.1,
             ),
             DailyProgress(
-              caloriesConsumed: caloriesConsumed,
-              totalCalories: totalCalories,
+              caloriesConsumed: _caloriesConsumed,
+              totalCalories: _totalCalories,
             ),
             SizedBox(
               height: Get.height * 0.2,
             ),
             Column(
               children: [
-                const CameraButton(),
+                CameraButton(
+                  fetchCalorieData: _fetchCalorieData,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -75,8 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         Get.to(
                           () => HealthStatusScreen(
-                            allocatedCalories: totalCalories,
-                            isHealthy: (caloriesConsumed / totalCalories) < 1,
+                            allocatedCalories: _totalCalories,
+                            isHealthy: (_caloriesConsumed / _totalCalories) < 1,
                           ),
                         );
                       },
