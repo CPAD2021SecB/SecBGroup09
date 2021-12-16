@@ -90,7 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Column(
               children: [
-                const CameraButton(),
+                CameraButton(
+                  fetchCalorieData: _fetchCalorieData,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
