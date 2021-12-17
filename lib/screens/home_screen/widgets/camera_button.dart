@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:calorie_tracker/screens/calorie_info_screen/calorie_info_screen.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -19,33 +21,49 @@ class _CameraButtonState extends State<CameraButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        showDialog(
-            context: context,
-            builder: (_) {
-              return AlertDialog(
-                title: const Text("Image Source"),
-                content: SizedBox(
-                  height: Get.height * 0.1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      DialogButton(
-                        iconData: Icons.camera_alt,
-                        title: "Camera",
-                        imageSource: ImageSource.camera,
-                        fetchCalorieData: widget.fetchCalorieData,
-                      ),
-                      DialogButton(
-                        iconData: Icons.landscape_sharp,
-                        title: "Gallery",
-                        imageSource: ImageSource.gallery,
-                        fetchCalorieData: widget.fetchCalorieData,
-                      ),
-                    ],
-                  ),
-                ),
-              );
+        if (kIsWeb) {
+          FilePickerResult? result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['jpg', 'png'],
+          );
+          if (result != null) {
+            Get.back();
+            Get.to(() => CalorieInfoScreen(
+                  file: File.fromRawPath(result.files.first.bytes!),
+                  uint8listFile: result.files.first.bytes,
+                ))?.then((_) {
+              widget.fetchCalorieData();
             });
+          }
+        } else {
+          showDialog(
+              context: context,
+              builder: (_) {
+                return AlertDialog(
+                  title: const Text("Image Source"),
+                  content: SizedBox(
+                    height: Get.height * 0.1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        DialogButton(
+                          iconData: Icons.camera_alt,
+                          title: "Camera",
+                          imageSource: ImageSource.camera,
+                          fetchCalorieData: widget.fetchCalorieData,
+                        ),
+                        DialogButton(
+                          iconData: Icons.landscape_sharp,
+                          title: "Gallery",
+                          imageSource: ImageSource.gallery,
+                          fetchCalorieData: widget.fetchCalorieData,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        }
       },
       child: Container(
         decoration: const BoxDecoration(
