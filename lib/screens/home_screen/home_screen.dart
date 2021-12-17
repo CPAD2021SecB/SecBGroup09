@@ -5,6 +5,7 @@ import 'package:calorie_tracker/screens/home_screen/widgets/daily_progress.dart'
 import 'package:calorie_tracker/screens/sport_event_screen/sport_event_screen.dart';
 import 'package:calorie_tracker/services/calorie_service.dart';
 import 'package:calorie_tracker/services/user_info_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -76,48 +77,60 @@ class _HomeScreenState extends State<HomeScreen> {
             fit: BoxFit.fill,
           ),
         ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: Get.height * 0.1,
-            ),
-            DailyProgress(
-              caloriesConsumed: _caloriesConsumed,
-              totalCalories: _totalCalories,
-            ),
-            SizedBox(
-              height: Get.height * 0.2,
-            ),
-            Column(
-              children: [
-                CameraButton(
-                  fetchCalorieData: _fetchCalorieData,
+        child: SafeArea(
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  icon: const Icon(
+                    Icons.logout,
+                    color: Colors.white,
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ActionButton(
-                      svgPath: "assets/svg/events.svg",
-                      onPressed: () {
-                        Get.to(() => const SportEventScreen());
-                      },
-                    ),
-                    ActionButton(
-                      svgPath: "assets/svg/status.svg",
-                      onPressed: () {
-                        Get.to(
-                          () => HealthStatusScreen(
-                            allocatedCalories: _totalCalories,
-                            isHealthy: (_caloriesConsumed / _totalCalories) < 1,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                )
-              ],
-            )
-          ],
+              ),
+              DailyProgress(
+                caloriesConsumed: _caloriesConsumed,
+                totalCalories: _totalCalories,
+              ),
+              SizedBox(
+                height: Get.height * 0.2,
+              ),
+              Column(
+                children: [
+                  CameraButton(
+                    fetchCalorieData: _fetchCalorieData,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ActionButton(
+                        svgPath: "assets/svg/events.svg",
+                        onPressed: () {
+                          Get.to(() => const SportEventScreen());
+                        },
+                      ),
+                      ActionButton(
+                        svgPath: "assets/svg/status.svg",
+                        onPressed: () {
+                          Get.to(
+                            () => HealthStatusScreen(
+                              allocatedCalories: _totalCalories,
+                              isHealthy:
+                                  (_caloriesConsumed / _totalCalories) < 1,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
